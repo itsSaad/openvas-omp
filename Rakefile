@@ -13,7 +13,7 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "openvas-omp"
-  gem.homepage = "http://github.com/kost/openvas-omp"
+  gem.homepage = "https://github.com/STIS-TeamRuby/openvas-omp"
   gem.license = "MIT"
   gem.summary = %Q{Communicate with OpenVAS manager through OMP}
   gem.description = %Q{Communicate with OpenVAS manager through OMP. 
