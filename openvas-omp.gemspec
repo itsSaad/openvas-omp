@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "openvas"
-  spec.version       = OpenVas::VERSION
+  spec.version       = 1.0
   spec.authors       = ["Saad Masood"]
   spec.email         = ["itsmesmd@gmail.com"]
   spec.description   = %q{Fork of Kost's openvas-omp gem}
