@@ -510,16 +510,39 @@ module OpenVASOMP
 		# pdf_content=ov.report_get_byid(id,"PDF")
 		# File.open('report.pdf', 'w') {|f| f.write(pdf_content) }
 		# 
-		def report_get_byid (id,format)
-			decode=Array["HTML","NBE","PDF"]
-			xr=report_get_raw("report_id"=>id,"format"=>format)
+		def report_get_byid (id,format_id)
+			decode=Array["HTML","NBE","PDF","6c248850-1f62-11e1-b082-406186ea4fc5"]
+			xr=report_get_raw("report_id"=>id,"format_id"=>format_id)
 			resp=xr.elements['get_reports_response'].elements['report'].text
-			if decode.include?(format) 
+			if decode.include?(format_id) 
 				resp=Base64.decode64(resp)
 			end
 			return resp
 		end
 
+		def format_get_all (p={})
+			xmlreq=xml_attr("get_report_formats",p).to_s()
+			begin
+				xr=omp_request_xml(xmlreq)
+			rescue 
+				raise OMPResponseError
+			end
+			return xr
+		end
+
+		def format_get_options ( report_format_id=nil,filter=nil,filt_id=nil,trash=nil,alerts=nil,params=nil,details=nil)
+			#to be devlop 
+		end
+
+		def format_get_byname (fromat_name="XML")
+			xr=format_get_all()
+			xr.elements.each('//get_report_formats_response/report_format') do |format|
+			if format.elements["name"].text== fromat_name
+				return format.attributes["id"].to_s
+			end
+			end
+			return nil
+		end
 		# OMP - get report all, returns report
 		#
 		# Usage:
@@ -798,13 +821,25 @@ module OpenVASOMP
 				td["progress"]=task.elements["progress"].text
 				if defined? task.elements["first_report"].elements["report"].attributes["id"] then
 				td["firstreport"]=task.elements["first_report"].elements["report"].attributes["id"]
+				td["fhole"]=task.elements["first_report"].elements["report"].elements["result_count"].elements["hole"].text
+				td["fwarning"]=task.elements["first_report"].elements["report"].elements["result_count"].elements["warning"].text
+				td["finfo"]=task.elements["first_report"].elements["report"].elements["result_count"].elements["info"].text
 				else
 					td["firstreport"]=nil
+					td["fhole"]=nil
+					td["fwarning"]=nil
+					td["finfo"]=nil
 				end
 				if defined? task.elements["last_report"].elements["report"].attributes["id"] then
 				td["lastreport"]=task.elements["last_report"].elements["report"].attributes["id"] 
+				td["lhole"]=task.elements["last_report"].elements["report"].elements["result_count"].elements["hole"].text
+				td["lwarning"]=task.elements["last_report"].elements["report"].elements["result_count"].elements["warning"].text
+				td["linfo"]=task.elements["last_report"].elements["report"].elements["result_count"].elements["info"].text
 				else
 					td["lastreport"]=nil
+					td["lhole"]=nil
+					td["lwarning"]=nil
+					td["linfo"]=nil
 				end
 				return (td)
 			end
